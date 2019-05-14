@@ -1,7 +1,7 @@
 # SETUP VARIABLES
 
 inputFile <- 'inputs/obama.jpg'
-kernelSizes <- c(3, 5, 7)
+kernelSizes <- c(3, 5, 7) # NEEDS to be uneven!
 
 options(scipen = 999)
 
@@ -73,54 +73,54 @@ for (kernelSize in kernelSizes) {
     filePath <- paste('outputs/obama/gaussian-noise/noise-',
                       format(noiseVal, nsmall = 2), '.jpg', sep = '')
     imgData <- loadImage(filePath)
-
+  
     outImg <- meanFilter(imgData, kernelSize)
-
+  
     saveImageFile(outImg,
                   paste('outputs/obama/mean-filter/gaussian-noise/kernel-size=', kernelSize, sep = ''),
                   paste('noise-', format(noiseVal, nsmall = 2), sep = ''))
   }
-  
+
   for (noiseVal in saltPepperNoiseVals) {
     filePath <- paste('outputs/obama/salt-and-pepper-noise/noise-',
                       format(noiseVal, nsmall = 2), '.jpg', sep = '')
     imgData <- loadImage(filePath)
-
+  
     outImg <- meanFilter(imgData, kernelSize)
-
+  
     saveImageFile(outImg,
                   paste('outputs/obama/mean-filter/salt-and-pepper-noise/kernel-size=', kernelSize, sep = ''),
                   paste('noise-', format(noiseVal, nsmall = 2), sep = ''))
   }
-  
+
   # MEDIAN FILTER
-  
+
   for (noiseVal in gaussianNoiseVals) {
     filePath <- paste('outputs/obama/gaussian-noise/noise-',
                       format(noiseVal, nsmall = 2), '.jpg', sep = '')
     imgData <- loadImage(filePath)
-
+  
     outImg <- medianFilter(imgData, kernelSize)
-
+  
     saveImageFile(outImg,
                   paste('outputs/obama/median-filter/gaussian-noise/kernel-size=', kernelSize, sep = ''),
                   paste('noise-', format(noiseVal, nsmall = 2), sep = ''))
   }
-
+  
   for (noiseVal in saltPepperNoiseVals) {
     filePath <- paste('outputs/obama/salt-and-pepper-noise/noise-',
                       format(noiseVal, nsmall = 2), '.jpg', sep = '')
     imgData <- loadImage(filePath)
-
+  
     outImg <- medianFilter(imgData, kernelSize)
-
+  
     saveImageFile(outImg,
                   paste('outputs/obama/median-filter/salt-and-pepper-noise/kernel-size=', kernelSize, sep = ''),
                   paste('noise-', format(noiseVal, nsmall = 2), sep = ''))
   }
-  
+
   # GAUSSIAN FILTER
-  
+
   for (noiseVal in gaussianNoiseVals) {
     filePath <- paste('outputs/obama/gaussian-noise/noise-',
                       format(noiseVal, nsmall = 2), '.jpg', sep = '')
@@ -132,7 +132,7 @@ for (kernelSize in kernelSizes) {
                   paste('outputs/obama/gaussian-filter/gaussian-noise/kernel-size=', kernelSize, sep = ''),
                   paste('noise-', format(noiseVal, nsmall = 2), sep = ''))
   }
-
+  
   for (noiseVal in saltPepperNoiseVals) {
     filePath <- paste('outputs/obama/salt-and-pepper-noise/noise-',
                       format(noiseVal, nsmall = 2), '.jpg', sep = '')
@@ -144,7 +144,7 @@ for (kernelSize in kernelSizes) {
                   paste('outputs/obama/gaussian-filter/salt-and-pepper-noise/kernel-size=', kernelSize, sep = ''),
                   paste('noise-', format(noiseVal, nsmall = 2), sep = ''))
   }
-  
+
   # MEAN SQUARE ERROR (MSE) ANALYSIS OF FILTERED GAUSSIAN NOISE
 
   meanColumnName <- paste('meanFilter-', kernelSize, 'x', kernelSize, sep = '')
@@ -153,30 +153,30 @@ for (kernelSize in kernelSizes) {
   MSETable[medianColumnName] = NA
   gaussianColumnName <- paste('gaussianFilter-', kernelSize, 'x', kernelSize, sep = '')
   MSETable[gaussianColumnName] = NA
-  
+
   for (noiseVal in gaussianNoiseVals) {
     originalImageData <- loadImage(inputFile)
-    
+
     # Mean filter
     filteredImageData <- loadImage(paste('outputs/obama/mean-filter/gaussian-noise/kernel-size=',
                                          kernelSize, '/', 'noise-', format(noiseVal, nsmall = 2),
                                          '.jpg', sep = ''))
-    
+
     MSETable[format(noiseVal, nsmall = 2), meanColumnName] <- meanSquareError(originalImageData, filteredImageData)
-    
-    
+
+
     # Median filter
     filteredImageData <- loadImage(paste('outputs/obama/median-filter/gaussian-noise/kernel-size=',
                                          kernelSize, '/', 'noise-', format(noiseVal, nsmall = 2),
                                          '.jpg', sep = ''))
-    
+
     MSETable[format(noiseVal, nsmall = 2), medianColumnName] <- meanSquareError(originalImageData, filteredImageData)
-    
+
     # Gaussian filter
     filteredImageData <- loadImage(paste('outputs/obama/gaussian-filter/gaussian-noise/kernel-size=',
                                          kernelSize, '/', 'noise-', format(noiseVal, nsmall = 2),
                                          '.jpg', sep = ''))
-    
+
     MSETable[format(noiseVal, nsmall = 2), gaussianColumnName] <- meanSquareError(originalImageData, filteredImageData)
   }
 }

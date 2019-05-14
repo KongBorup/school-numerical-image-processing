@@ -1,3 +1,21 @@
+# Use manually written insertion sort because it is much faster at sorting small
+# vectors than the built-in sort() function.
+insertionSort <- function(v) {
+  for (j in 2:length(v)) {
+    key <- v[j]
+    i <- j - 1 
+    
+    while (i > 0 && v[i] > key) {
+      v[i + 1] <- v[i]
+      i <- i - 1 
+    }
+    
+    v[i + 1] <- key
+  }
+  
+  v
+}
+
 medianFilter <- function(imgData, kernelSize) {
   w <- nrow(imgData)
   h <- ncol(imgData)
@@ -6,21 +24,19 @@ medianFilter <- function(imgData, kernelSize) {
   
   for (x in offset:(w - offset)) {
     for (y in offset:(h - offset)) {
-      # Read all pixels inside kernel
       xMin <- x - offset
       yMin <- y - offset
       xMax <- x + offset
       yMax <- y + offset
       
-      insideKernel <- c()
+      insideKernel <- imgData[xMin:xMax, yMin:yMax]
+      insideKernelVec <- as.vector(insideKernel)
+      insideKernelVec <- insideKernelVec[!is.na(insideKernelVec)]
       
-      for (kx in xMin:xMax) {
-        for (ky in yMin:yMax) {
-          insideKernel <- c(insideKernel, imgData[kx, ky])
-        }
-      }
+      # Add 0.5 because kernel size is always an uneven number
+      medianPixel <- insertionSort(insideKernelVec)[kernelSize^2 / 2 + 0.5]
       
-      imgData[x, y] <- median(insideKernel)
+      imgData[x, y] <- medianPixel
     }
   }
   

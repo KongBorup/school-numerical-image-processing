@@ -4,3 +4,6 @@ Numerisk billedbehandling 2.0.Rproj
 .Rhistory
 mse.csv
 outputs/**
+deleteme.txt
+testProfile.out
+benchmarking.md

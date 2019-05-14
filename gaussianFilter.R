@@ -1,15 +1,15 @@
+e <- exp(1)
+sigma <- 1
+
+G <- function(x, y) {
+  1 / (2 * pi * sigma^2) * e^(-(x^2 + y^2) / (2 * sigma^2))
+}
+
 gaussianFilter <- function(imgData, kernelSize) {
   w <- nrow(imgData)
   h <- ncol(imgData)
   
   offset <- floor(kernelSize / 2)
-  
-  e <- exp(1)
-  sigma <- 1
-  
-  G <- function(x, y) {
-    1 / (2 * pi * sigma^2) * e^(-(x^2 + y^2) / (2 * sigma^2))
-  }
   
   gaussianVals <- matrix(nrow = kernelSize, ncol = kernelSize)
   
@@ -19,26 +19,14 @@ gaussianFilter <- function(imgData, kernelSize) {
     }
   }
   
-  for (x in offset:(w - offset - 1)) { # why tf is there subtraction here and addition later?
-    for (y in offset:(h - offset - 1)) {
-      newPixVal <- 0
+  for (x in (offset + 1):(w - offset)) {
+    for (y in (offset + 1):(h - offset)) {
+      xMin <- x - offset
+      yMin <- y - offset
+      xMax <- x + offset
+      yMax <- y + offset
       
-      # Loop over kernel pixels
-      xMin <- x - offset + 1
-      yMin <- y - offset + 1
-      xMax <- x + offset + 1
-      yMax <- y + offset + 1
-      
-      for (kx in xMin:xMax) {
-        for (ky in yMin:yMax) {
-          ix <- kx - xMin + 1
-          iy <- ky - yMin + 1
-          
-          newPixVal <- newPixVal + gaussianVals[ix, iy] * imgData[kx, ky]
-        }
-      }
-      
-      imgData[x, y] <- newPixVal
+      imgData[x, y] <- sum(gaussianVals * imgData[xMin:xMax, yMin:yMax])
     }
   }
   

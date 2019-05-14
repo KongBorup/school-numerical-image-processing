@@ -6,21 +6,13 @@ meanFilter <- function(imgData, kernelSize) {
   
   for (x in offset:(w - offset)) {
     for (y in offset:(h - offset)) {
-      # Read all pixels inside kernel
       xMin <- x - offset
       yMin <- y - offset
       xMax <- x + offset
       yMax <- y + offset
       
-      insideKernel <- c()
-      
-      for (kx in xMin:xMax) {
-        for (ky in yMin:yMax) {
-          insideKernel <- c(insideKernel, imgData[kx, ky])
-        }
-      }
-      
-      imgData[x, y] <- mean(insideKernel)
+      insideKernel <- imgData[xMin:xMax, yMin:yMax]
+      imgData[x, y] <- .Internal(mean(insideKernel))
     }
   }
   
